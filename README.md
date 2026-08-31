@@ -1,6 +1,6 @@
-# MR Career Partner
+# MagicResume
 
-MR is an evidence-first career partner that remembers a person's work, asks
+MagicResume is an evidence-first career partner that remembers a person's work, asks
 the questions that uncover real impact, and turns each opportunity into a
 truthful application plus a concrete plan to close gaps before a recruiter
 sees it.
