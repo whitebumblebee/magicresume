@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+/* Exact colors when printing to PDF */
+* {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.print-root {
+  display: none;
+}
+
+@media print {
+  .screen-only {
+    display: none !important;
+  }
+  .print-root {
+    display: block !important;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+  }
+}

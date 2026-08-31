@@ -1,0 +1,75 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+/test-results
+/playwright-report
+/blob-report
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (keep the example so operators know which names to set)
+.env*
+!.env.example
+
+
+.pglite/
+.pglite.bak-*/
+
+
+.skillframework/
+
+# local-only operator and hackathon docs
+/docs/
+
+.agents/
+.cursor/
+.kiro/
+
+
+/tmp/
+
+/theprompt.md
+/last_kiro_chat.md
+/conv.md
+/workflow.md
+
+/todo.md
+/history.md
+/history_*.md
+/instructions_agents.md
+/AGENTS.md
+/CLAUDE.md
+/WARP.md
+
+# legacy hosting metadata
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

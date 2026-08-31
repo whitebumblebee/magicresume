@@ -1,0 +1,79 @@
+substitutions:
+  _REGION: us-central1
+  _AR_REPOSITORY: mr
+  _SERVICE: mr-career-partner
+  _SERVICE_ACCOUNT: mr-career-partner
+  _AUTH_URL: https://mr-career-partner-g3larw422q-uc.a.run.app
+
+steps:
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE}:$BUILD_ID
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE}:$BUILD_ID
+
+  - id: deploy-migration-job
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - deploy
+      - ${_SERVICE}-migrate
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE}:$BUILD_ID
+      - --region=${_REGION}
+      - --service-account=${_SERVICE_ACCOUNT}@$PROJECT_ID.iam.gserviceaccount.com
+      - --set-secrets=DATABASE_URL=mr-database-url:latest
+      - --command=node
+      - --args=scripts/migrate.mjs
+      - --max-retries=1
+      - --tasks=1
+
+  - id: migrate
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - execute
+      - ${_SERVICE}-migrate
+      - --region=${_REGION}
+      - --wait
+
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE}:$BUILD_ID
+      - --region=${_REGION}
+      - --platform=managed
+      - --service-account=${_SERVICE_ACCOUNT}@$PROJECT_ID.iam.gserviceaccount.com
+      - --clear-cloudsql-instances
+      - --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID,GOOGLE_CLOUD_LOCATION=global,GEMINI_MODEL=gemini-3.7-flash,AUTH_URL=${_AUTH_URL},AUTH_TRUST_HOST=true
+      - --set-secrets=DATABASE_URL=mr-database-url:latest,AUTH_SECRET=mr-auth-secret:latest,AUTH_GOOGLE_ID=mr-google-client-id:latest,AUTH_GOOGLE_SECRET=mr-google-client-secret:latest
+      - --allow-unauthenticated
+      - --port=8080
+      - --cpu=2
+      - --memory=2Gi
+      - --concurrency=20
+      - --timeout=300
+      - --min-instances=0
+      - --max-instances=10
+      - --labels=app=mr-career-partner,hackathon=all-things-agentic
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE}:$BUILD_ID
+
+options:
+  logging: CLOUD_LOGGING_ONLY

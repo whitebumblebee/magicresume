@@ -1,0 +1,2 @@
+ALTER TABLE "resume" ADD CONSTRAINT "resume_applicationId_application_id_fk" FOREIGN KEY ("applicationId") REFERENCES "public"."application"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "resume_applicationId_idx" ON "resume" USING btree ("applicationId");
