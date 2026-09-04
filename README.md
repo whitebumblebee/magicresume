@@ -199,20 +199,3 @@ The health endpoint is `/api/health`.
 Cloud Run automatically enables Genkit's Google Cloud telemetry exporter.
 Prompt/response payload logging is disabled because career and resume data is
 sensitive; traces retain model/tool timing and operation metadata.
-
-## Hackathon disclosure
-
-This entry targets the Collaborative Partner category of the All Things
-Agentic Hackathon.
-
-The project began as a copy of the pre-existing MagicResume codebase. Reused
-work includes its pure resume renderer, browser pretext measurement and
-auto-fit algorithm, PDF/screenshot import pipeline, ATS checks, editor,
-client-side print export, Auth.js setup, and resume persistence.
-
-Hackathon-period work in this repository includes the evidence/provenance
-domain, integrity validator, career-memory persistence, Genkit agent and tools,
-Gemini 3.7 Vertex integration, Firestore session isolation, JD evidence/gap
-pipeline, target-state export boundary, preparation goals, feedback learning,
-collaborative workspace, Cloud Run/Neon deployment, telemetry, and the
-submission demo/tests.
